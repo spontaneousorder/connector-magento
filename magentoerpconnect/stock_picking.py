@@ -74,6 +74,7 @@ class StockPickingAdapter(GenericAdapter):
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
     def _call(self, method, arguments):
+	return None #maigner
         try:
             return super(StockPickingAdapter, self)._call(method, arguments)
         except xmlrpclib.Fault as err:
@@ -86,6 +87,7 @@ class StockPickingAdapter(GenericAdapter):
 
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
+	return None #maigner
         return self._call('%s.create' % self._magento_model,
                           [order_id, items, comment, email, include_comment])
 
@@ -98,6 +100,7 @@ class StockPickingAdapter(GenericAdapter):
         :param tracking_title: title displayed on Magento for the tracking
         :param tracking_number: tracking number
         """
+	return None #maigner
         return self._call('%s.addTrack' % self._magento_model,
                           [magento_id, carrier_code,
                            tracking_title, tracking_number])
@@ -108,6 +111,7 @@ class StockPickingAdapter(GenericAdapter):
         :param magento_id: order increment id
         :rtype: list
         """
+	return None #maigner
         return self._call('%s.getCarriers' % self._magento_model,
                           [magento_id])
 
@@ -117,6 +121,7 @@ class MagentoPickingExporter(Exporter):
     _model_name = ['magento.stock.picking']
 
     def _get_args(self, picking, lines_info=None):
+	return None #maigner
         if lines_info is None:
             lines_info = {}
         sale_binder = self.binder_for('magento.sale.order')
@@ -135,6 +140,7 @@ class MagentoPickingExporter(Exporter):
         :return: dict of {magento_product_id: quantity}
         :rtype: dict
         """
+	return None #maigner
         item_qty = {}
         # get product and quantities to ship from the picking
         for line in picking.move_lines:
@@ -161,6 +167,7 @@ class MagentoPickingExporter(Exporter):
         :returns: value of send_picking_done_mail chosen on magento shop
         :rtype: boolean
         """
+	return None #maigner
         magento_shop = picking.sale_id.magento_bind_ids[0].store_id
         return magento_shop.send_picking_done_mail
 
@@ -168,6 +175,7 @@ class MagentoPickingExporter(Exporter):
         """
         Export the picking to Magento
         """
+	return None #maigner
         picking = self.model.browse(binding_id)
         if picking.magento_id:
             return _('Already exported')
@@ -214,6 +222,7 @@ def picking_out_done(session, model_name, record_id, picking_method):
     :param picking_method: picking_method, can be 'complete' or 'partial'
     :type picking_method: str
     """
+    return None #maigner
     picking = session.env[model_name].browse(record_id)
     sale = picking.sale_id
     if not sale:
@@ -237,6 +246,7 @@ def delay_export_picking_out(session, model_name, record_id, vals):
     # tracking number in the job kwargs, because if we read the
     # picking at the time of execution of the job, a tracking could
     # have been added and it would be exported twice.
+    return None #maigner
     with_tracking = bool(binding.carrier_tracking_ref)
     export_picking_done.delay(session, model_name, record_id,
                               with_tracking=with_tracking)
@@ -250,6 +260,7 @@ def export_picking_done(session, model_name, record_id, with_tracking=True):
     # are pending and miss this argument will behave the same, but
     # it should be called with True only if the carrier_tracking_ref
     # is True when the job is created.
+    return None #maigner
     picking = session.env[model_name].browse(record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)

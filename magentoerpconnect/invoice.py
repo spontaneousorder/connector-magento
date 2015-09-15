@@ -91,6 +91,7 @@ class AccountInvoiceAdapter(GenericAdapter):
     def create(self, order_increment_id, items, comment, email,
                include_comment):
         """ Create a record on the external system """
+	return None #maigner
         return self._call('%s.create' % self._magento_model,
                           [order_increment_id, items, comment,
                            email, include_comment])
@@ -102,6 +103,7 @@ class AccountInvoiceAdapter(GenericAdapter):
         :param order_id: 'order_id' field of the magento sale order, this
                          is not the same field than 'increment_id'
         """
+	return None #maigner
         if filters is None:
             filters = {}
         if order_id is not None:
@@ -115,6 +117,7 @@ class MagentoInvoiceExporter(Exporter):
     _model_name = ['magento.account.invoice']
 
     def _export_invoice(self, magento_id, lines_info, mail_notification):
+	return None #maigner
         if not lines_info:  # invoice without any line for the sale order
             return
         return self.backend_adapter.create(magento_id,
@@ -133,6 +136,7 @@ class MagentoInvoiceExporter(Exporter):
         :return: dict of {magento_product_id: quantity}
         :rtype: dict
         """
+	return None #maigner
         item_qty = {}
         # get product and quantities to invoice
         # if no magento id found, do not export it
@@ -155,6 +159,7 @@ class MagentoInvoiceExporter(Exporter):
 
     def run(self, binding_id):
         """ Run the job to export the validated/paid invoice """
+	return None #maigner
         invoice = self.model.browse(binding_id)
 
         magento_order = invoice.magento_order_id
@@ -216,6 +221,7 @@ def invoice_create_bindings(session, model_name, record_id):
     Create a ``magento.account.invoice`` record. This record will then
     be exported to Magento.
     """
+    return None #maigner
     invoice = session.env[model_name].browse(record_id)
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
@@ -249,6 +255,7 @@ def delay_export_account_invoice(session, model_name, record_id, vals):
     """
     Delay the job to export the magento invoice.
     """
+    return None #maigner
     export_invoice.delay(session, model_name, record_id)
 
 
@@ -256,6 +263,7 @@ def delay_export_account_invoice(session, model_name, record_id, vals):
 @related_action(action=unwrap_binding)
 def export_invoice_paid(session, model_name, record_id):
     """ Deprecated in 2.1.0.dev0. """
+    return None #maigner
     _logger.warning('Deprecated: the export_invoice_paid() job is deprecated '
                     'in favor of export_invoice()')
     return export_invoice(session, model_name, record_id)
@@ -265,6 +273,7 @@ def export_invoice_paid(session, model_name, record_id):
 @related_action(action=unwrap_binding)
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
+    return None #maigner
     invoice = session.env[model_name].browse(record_id)
     backend_id = invoice.backend_id.id
     env = get_environment(session, model_name, backend_id)
