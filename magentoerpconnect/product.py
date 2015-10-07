@@ -622,9 +622,10 @@ class ProductInventoryExporter(Exporter):
         result = {}
         if 'magento_qty' in fields:
             result.update({
-                'qty': product.magento_qty,
+                'qty': product.magento_qty
                 # put the stock availability to "out of stock"
-                'is_in_stock': int(product.magento_qty > 0)
+		# MAIGNER: 07.10.2015 removed out of stock setting sync
+                #'is_in_stock': int(product.magento_qty > 0)
             })
         if 'manage_stock' in fields:
             manage = product.manage_stock
